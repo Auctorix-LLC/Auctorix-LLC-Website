@@ -32,6 +32,46 @@ const CONTACT_EMAIL = '';
   addEventListener('load', toTop, { once: true });
   addEventListener('pageshow', e => { if (!e.persisted) toTop(); });
 
+  // ---------- Light / dark theme ----------
+  // The <head> sets data-theme before paint (saved choice, else the device
+  // setting). The toggle saves the choice; with no saved choice we keep
+  // following the device if it changes.
+  const root = document.documentElement;
+  const toggle = $('.theme-toggle');
+  const store = { get() { try { return localStorage.getItem('theme'); } catch (_) { return null; } },
+                  set(v) { try { localStorage.setItem('theme', v); } catch (_) {} } };
+  const syncToggle = () => {
+    const dark = root.dataset.theme === 'dark';
+    toggle?.setAttribute('aria-pressed', String(dark));
+    toggle?.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+  };
+  const applyTheme = (theme, origin) => {
+    if (root.dataset.theme === theme) return;
+    const swap = () => { root.dataset.theme = theme; syncToggle(); };
+    if (reduce) { swap(); return; }
+    if (document.startViewTransition && origin) {
+      const r = origin.getBoundingClientRect();
+      const x = r.left + r.width / 2, y = r.top + r.height / 2;
+      const end = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+      document.startViewTransition(swap).ready.then(() => {
+        root.animate({ clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${end}px at ${x}px ${y}px)`] },
+          { duration: 650, easing: 'cubic-bezier(.16,1,.3,1)', pseudoElement: '::view-transition-new(root)' });
+      }).catch(() => {});
+    } else {
+      root.classList.add('theme-fade'); swap();
+      setTimeout(() => root.classList.remove('theme-fade'), 450);
+    }
+  };
+  syncToggle();
+  toggle?.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    store.set(next);
+    applyTheme(next, toggle);
+  });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (!store.get()) applyTheme(e.matches ? 'dark' : 'light');
+  });
+
   // ---------- Scroll progress + nav state ----------
   const bar = $('.scroll-progress');
   const nav = $('.nav');
