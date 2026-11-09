@@ -10,7 +10,7 @@
 // Set FORM_ENDPOINT to a Formspree (or similar) URL, e.g.
 // "https://formspree.io/f/xxxxxxx". If it's empty, the form
 // falls back to opening an email to CONTACT_EMAIL.
-const FORM_ENDPOINT = '';
+const FORM_ENDPOINT = 'https://formspree.io/f/xkjwzyzp';
 const CONTACT_EMAIL = '';
 // ----------------------------------------------------------
 
