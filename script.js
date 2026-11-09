@@ -212,6 +212,24 @@ const CONTACT_EMAIL = '';
     if (g && track.children.length === 1) {
       const clone = g.cloneNode(true); clone.setAttribute('aria-hidden', 'true'); track.append(clone);
     }
+    // Slow down on hover by easing playbackRate. (Changing animation-duration
+    // in CSS makes the browser recompute the position, so the ticker jumps.)
+    const anim = track.getAnimations?.()[0];
+    const area = track.closest('.ticker');
+    if (!anim || !area || !finePointer) return;
+    let raf = 0, rate = 1;
+    const easeTo = target => {
+      cancelAnimationFrame(raf);
+      const step = () => {
+        rate += (target - rate) * 0.08;
+        if (Math.abs(rate - target) < 0.005) rate = target;
+        anim.playbackRate = rate;
+        if (rate !== target) raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    };
+    area.addEventListener('pointerenter', () => easeTo(0.35));
+    area.addEventListener('pointerleave', () => easeTo(1));
   });
 
   // ---------- FAQ accordion (accordion) ----------
