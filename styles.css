@@ -303,7 +303,7 @@ p{ margin:0; }
 @keyframes pulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(232,85,47,.6) } 60%{ box-shadow:0 0 0 7px rgba(232,85,47,0) } }
 
 /* feed demo panel on dealer hero */
-.feed{ background:#121721; border:1px solid var(--ink-line); border-radius:16px; padding:18px; font-size:14px; position:relative; overflow:hidden; }
+.feed{ color:var(--on-ink); background:#121721; border:1px solid var(--ink-line); border-radius:16px; padding:18px; font-size:14px; position:relative; overflow:hidden; }
 .feed__head{ display:flex; justify-content:space-between; color:var(--on-ink-3); padding:4px 6px 12px; border-bottom:1px solid var(--ink-line); }
 .feed__status{ color:#86EFAC; display:inline-flex; gap:8px; align-items:center; }
 .feed__status i{ width:7px; height:7px; border-radius:50%; background:#86EFAC; animation:pulse-g 1.8s infinite; }
@@ -406,11 +406,68 @@ p{ margin:0; }
   .feed__row span:nth-child(2){ display:none; }
 }
 
+/* ---------- Dealer platform: login sprawl ---------- */
+.hero--long h1{ font-size:clamp(38px,4.9vw,62px); line-height:1.04; }
+.sprawl{ position:relative; aspect-ratio:1/1; max-width:480px; width:100%; justify-self:center; margin-block:44px 52px; }
+.sprawl__meter{ position:absolute; top:-44px; left:50%; transform:translateX(-50%); z-index:5; display:flex; gap:10px; align-items:center; font-size:13px; color:var(--on-ink-3); letter-spacing:.06em; text-transform:uppercase; white-space:nowrap; }
+.sprawl__meter b{ font-family:var(--display); font-size:22px; color:var(--signal-soft); min-width:2ch; text-align:right; font-variant-numeric:tabular-nums; }
+.sprawl__tile{
+  position:absolute; left:50%; top:52%; width:46%; padding:12px 14px 14px; border-radius:10px;
+  background:#E9E6DF; color:#2B2B2B; border:1px solid #BDB8AE; box-shadow:0 14px 30px rgba(0,0,0,.35);
+  display:flex; flex-direction:column; gap:6px; font-size:12px; overflow:hidden;
+  transform:translate(-50%,-50%) translate(var(--x),var(--y)) rotate(var(--r));
+  transition:transform .9s var(--ease-out), opacity .6s ease;
+  transition-delay:calc(var(--i,0) * 90ms);
+}
+.sprawl__tile i{ display:block; height:8px; margin:-12px -14px 4px; background:linear-gradient(90deg,#3E5C8A,#6F8DB8); }
+.sprawl__tile b{ font-family:var(--display); font-size:15px; }
+.sprawl__tile span{ display:block; border:1px solid #B8B3A9; background:#fff; border-radius:3px; padding:3px 7px; color:#6E6A62; }
+.sprawl__tile em{ font-style:normal; font-size:11px; color:#B42318; }
+.js .sprawl .sprawl__tile{ opacity:0; transform:translate(-50%,-50%) translate(var(--x),calc(var(--y) + 40px)) rotate(var(--r)) scale(.9); }
+.js .sprawl.is-in .sprawl__tile{ opacity:1; transform:translate(-50%,-50%) translate(var(--x),var(--y)) rotate(var(--r)); }
+.js .sprawl.is-merged .sprawl__tile{ opacity:0; transform:translate(-50%,-50%) scale(.4) rotate(0deg); transition-delay:calc(var(--i,0) * 70ms); }
+.sprawl__one{
+  position:absolute; left:50%; top:54%; width:72%; padding:28px; border-radius:16px; z-index:4;
+  background:linear-gradient(160deg,#1A202B,#11151C); border:1px solid var(--ink-line); box-shadow:0 30px 70px rgba(0,0,0,.45);
+  display:flex; flex-direction:column; gap:14px; text-align:center; align-items:center;
+  transform:translate(-50%,-50%); transition:opacity .7s ease .55s, transform .9s var(--ease-spring) .55s;
+}
+.js .sprawl .sprawl__one{ opacity:0; transform:translate(-50%,-50%) scale(.85); }
+.js .sprawl.is-merged .sprawl__one{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+.sprawl__brand{ display:flex; align-items:center; gap:10px; color:var(--on-ink); }
+.sprawl__brand svg{ width:30px; height:27px; fill:var(--signal-hi); }
+.sprawl__brand span{ font-family:var(--display); font-weight:800; letter-spacing:.14em; }
+.sprawl__one p{ font-family:var(--display); font-size:24px; font-weight:800; color:var(--on-ink); }
+.sprawl__one ul{ list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+.sprawl__one li{ font-size:13px; font-weight:600; color:var(--signal-tint); background:rgba(232,85,47,.10); border:1px solid rgba(232,85,47,.25); padding:4px 11px; border-radius:999px; }
+.sprawl__replay{ position:absolute; bottom:-52px; left:50%; transform:translateX(-50%); z-index:5; background:none; border:0; color:var(--on-ink-3); font:inherit; font-size:13px; cursor:pointer; padding:10px 14px; min-height:44px; opacity:0; visibility:hidden; transition:opacity .4s ease 1.4s, color .2s; }
+.sprawl.is-merged .sprawl__replay{ opacity:1; visibility:visible; }
+.sprawl__replay:hover{ color:var(--on-ink); }
+
+/* pillars + today header */
+.pillars{ list-style:none; margin:24px 0 0; padding:0; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; }
+.pillars li{ background:var(--paper); padding:26px 28px; display:flex; flex-direction:column; gap:6px; }
+.pillars b{ font-family:var(--display); font-size:18px; }
+.pillars span{ color:var(--text-2); font-size:16px; }
+.today__head{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:48px; align-items:center; margin-bottom:48px; }
+.feature--cta{ text-decoration:none; }
+@media (max-width: 960px){
+  .today__head{ grid-template-columns:1fr; }
+  .pillars{ grid-template-columns:1fr; }
+  .sprawl{ max-width:400px; }
+}
+@media (max-width: 640px){
+  .sprawl__tile{ width:54%; font-size:11px; }
+  .sprawl__tile span:nth-of-type(2){ display:none; }
+  .sprawl__one{ width:86%; padding:22px; }
+}
+
 /* ---------- Reduced motion: everything visible, nothing moves ---------- */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{ animation:none!important; transition:none!important; scroll-behavior:auto!important; }
-  .js [data-reveal],.js [data-stagger] > *,.js .split .w,.js .feed__row{ opacity:1!important; transform:none!important; filter:none!important; }
+  .js [data-reveal],.js [data-stagger] > *,.js .split .w,.js .feed__row,.js .sprawl .sprawl__one{ opacity:1!important; transform:none!important; filter:none!important; }
   .js .mark-stroke{ stroke-dashoffset:0; stroke-opacity:0; } .js .mark-fill{ opacity:1; }
   .ticker__track{ transform:none; }
   .spotlight,.feed__scan{ display:none; }
+  .js .sprawl .sprawl__tile,.sprawl__replay,.sprawl__meter{ display:none; }
 }

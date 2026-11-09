@@ -281,6 +281,36 @@ const CONTACT_EMAIL = '';
     });
   });
 
+  // ---------- Login sprawl: 14 logins collapse into one ----------
+  $$('.sprawl').forEach(el => {
+    const meter = $('[data-sprawl-count]', el);
+    const replay = $('.sprawl__replay', el);
+    let timers = [];
+    const clear = () => { timers.forEach(clearTimeout); timers = []; };
+    const countDown = () => {
+      if (!meter) return;
+      let n = 14;
+      const step = () => { meter.textContent = n; if (n > 1) { n--; timers.push(setTimeout(step, 70)); } };
+      step();
+    };
+    const play = () => {
+      clear();
+      el.classList.remove('is-merged');
+      if (meter) meter.textContent = '14';
+      requestAnimationFrame(() => el.classList.add('is-in'));
+      timers.push(setTimeout(() => { el.classList.add('is-merged'); countDown(); }, 2600));
+    };
+    if (reduce) { el.classList.add('is-in', 'is-merged'); if (meter) meter.textContent = '1'; return; }
+    replay?.addEventListener('click', () => {
+      el.classList.remove('is-in', 'is-merged');
+      timers.push(setTimeout(play, 500));
+    });
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { play(); io.disconnect(); } }, { threshold: 0.3 });
+      io.observe(el);
+    } else play();
+  });
+
   // footer year
   $$('[data-year]').forEach(el => { el.textContent = new Date().getFullYear(); });
 })();
