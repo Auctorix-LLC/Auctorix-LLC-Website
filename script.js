@@ -20,6 +20,18 @@ const CONTACT_EMAIL = '';
   const $  = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
+  // ---------- Start new pages at the top ----------
+  // Opening a page fresh (clicking a link) always starts at the top unless the
+  // link points at a section (#contact etc.). Back/forward keeps its position.
+  const navType = performance.getEntriesByType?.('navigation')[0]?.type;
+  const toTop = () => {
+    if (location.hash || navType === 'back_forward') return;
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  };
+  toTop();
+  addEventListener('load', toTop, { once: true });
+  addEventListener('pageshow', e => { if (!e.persisted) toTop(); });
+
   // ---------- Scroll progress + nav state ----------
   const bar = $('.scroll-progress');
   const nav = $('.nav');
