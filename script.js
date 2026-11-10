@@ -33,9 +33,8 @@ const CONTACT_EMAIL = '';
   addEventListener('pageshow', e => { if (!e.persisted) toTop(); });
 
   // ---------- Light / dark theme ----------
-  // The <head> sets data-theme before paint (saved choice, else the device
-  // setting). The toggle saves the choice; with no saved choice we keep
-  // following the device if it changes.
+  // The <head> sets data-theme before paint: the visitor's saved choice,
+  // otherwise dark. The toggle saves the choice.
   const root = document.documentElement;
   const toggle = $('.theme-toggle');
   const store = { get() { try { return localStorage.getItem('theme'); } catch (_) { return null; } },
@@ -67,9 +66,6 @@ const CONTACT_EMAIL = '';
     const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
     store.set(next);
     applyTheme(next, toggle);
-  });
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-    if (!store.get()) applyTheme(e.matches ? 'dark' : 'light');
   });
 
   // ---------- Scroll progress + nav state ----------
